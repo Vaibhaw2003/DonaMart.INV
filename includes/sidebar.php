@@ -8,9 +8,11 @@ $user = currentUser();
 $currentPage = basename($_SERVER['PHP_SELF']);
 $currentDir  = basename(dirname($_SERVER['PHP_SELF']));
 
-function isActive(array $pages): string {
-    global $currentPage;
-    return in_array($currentPage, $pages) ? 'active' : '';
+if (!function_exists('isActive')) {
+    function isActive(array $pages): string {
+        global $currentPage;
+        return in_array($currentPage, $pages) ? 'active' : '';
+    }
 }
 
 // Low stock count for badge
@@ -25,14 +27,17 @@ $lowStockCount = db()->count('SELECT COUNT(*) c FROM products WHERE stock <= min
     <div class="sidebar-brand-icon">
       <i class="bi bi-box-seam-fill"></i>
     </div>
-    <div class="sidebar-brand-text">Smart<span>INV</span></div>
+    <div>
+      <div class="sidebar-brand-text">Smart<span>INV</span></div>
+      <div class="sidebar-brand-sub">Business Suite</div>
+    </div>
   </div>
 
   <!-- Navigation -->
   <nav class="sidebar-nav">
 
     <!-- Main -->
-    <div class="nav-section-label">Main</div>
+    <div class="nav-section-label">Overview</div>
 
     <div class="sidebar-item">
       <a href="<?= APP_URL ?>/admin/dashboard.php" class="sidebar-link <?= isActive(['dashboard.php']) ?>">
@@ -49,7 +54,7 @@ $lowStockCount = db()->count('SELECT COUNT(*) c FROM products WHERE stock <= min
         <i class="bi bi-boxes nav-icon"></i>
         <span>Products</span>
         <?php if ($lowStockCount > 0): ?>
-          <span class="badge bg-warning text-dark"><?= $lowStockCount ?></span>
+          <span class="badge" style="background:rgba(245,158,11,0.2);color:#f59e0b;"><?= $lowStockCount ?></span>
         <?php endif; ?>
       </a>
     </div>
@@ -138,9 +143,9 @@ $lowStockCount = db()->count('SELECT COUNT(*) c FROM products WHERE stock <= min
       <?php endif; ?>
       <div class="sidebar-user-info">
         <div class="sidebar-user-name"><?= e($user['name']) ?></div>
-        <div class="sidebar-user-role"><?= e($user['role']) ?></div>
+        <div class="sidebar-user-role"><?= e(ucfirst($user['role'])) ?></div>
       </div>
-      <i class="bi bi-chevron-right" style="color:#475569;font-size:11px;"></i>
+      <i class="bi bi-chevron-right" style="color:rgba(255,255,255,0.2);font-size:11px;"></i>
     </a>
   </div>
 </aside>

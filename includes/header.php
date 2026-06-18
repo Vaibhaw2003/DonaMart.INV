@@ -9,7 +9,7 @@ $pageTitle = $pageTitle ?? APP_NAME;
 $theme = $_COOKIE['smartinv_theme'] ?? ($settings['theme'] ?? 'light');
 ?>
 <!DOCTYPE html>
-<html lang="en" data-theme="<?= e($theme) ?>">
+<html lang="en" data-theme="<?= e($theme) ?>" data-bs-theme="<?= e($theme) ?>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
