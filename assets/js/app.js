@@ -17,11 +17,14 @@ const DarkMode = {
   },
   apply(theme) {
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-bs-theme', theme);
     const icon = document.getElementById('darkModeIcon');
     if (icon) {
       icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
     }
     localStorage.setItem(this.key, theme);
+    // Set cookie for PHP synchronization (lasts 1 year)
+    document.cookie = this.key + "=" + theme + ";path=/;max-age=31536000;SameSite=Strict";
   },
   toggle() {
     const current = document.documentElement.getAttribute('data-theme') || 'light';

@@ -36,7 +36,7 @@ if ($dompdfAvailable) {
 
     $html = buildInvoiceHTML($sale, $saleItems, $settings);
     $options = new \Dompdf\Options();
-    $options->set('defaultFont', 'Arial');
+    $options->set('defaultFont', 'DejaVu Sans');
     $dompdf = new \Dompdf\Dompdf($options);
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait');
@@ -81,7 +81,7 @@ function buildInvoiceHTML(array $sale, array $items, array $settings, bool $prin
     $printBtn = $printable ? '<div style="text-align:center;margin:20px 0;"><button onclick="window.print()" style="background:#2563eb;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;">🖨 Print Invoice</button></div>' : '';
 
     return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Invoice '.$invNo.'</title>
-<style>body{font-family:Arial,sans-serif;font-size:13px;color:#1e293b;margin:0;padding:20px;}
+<style>body{font-family:"DejaVu Sans",sans-serif;font-size:13px;color:#1e293b;margin:0;padding:20px;}
 @media print{button{display:none!important;}}
 table{width:100%;border-collapse:collapse;}
 </style></head><body>
