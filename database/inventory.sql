@@ -175,9 +175,9 @@ CREATE TABLE IF NOT EXISTS `activity_logs` (
 
 -- Default admin user (password: Admin@123)
 INSERT INTO `users` (`name`, `email`, `password`, `role`) VALUES
-('Super Admin', 'admin@smartinv.com', '$2y$10$F4xgNPpyshQtS6Lg6KpPtOGmWnSiu/CUXzIdjOW1LNYAincbP4haG', 'admin'),
-('Store Manager', 'manager@smartinv.com', '$2y$10$F4xgNPpyshQtS6Lg6KpPtOGmWnSiu/CUXzIdjOW1LNYAincbP4haG', 'manager'),
-('Sales Staff', 'staff@smartinv.com', '$2y$10$F4xgNPpyshQtS6Lg6KpPtOGmWnSiu/CUXzIdjOW1LNYAincbP4haG', 'staff');
+('Super Admin', 'admin@smartinv.com', '$2y$10$TaebdVhPU8ePXZk4QLgewOvznbTtg7V.TI9bSpD2Y.vmjh29q.mr2', 'admin'),
+('Store Manager', 'manager@smartinv.com', '$2y$10$TaebdVhPU8ePXZk4QLgewOvznbTtg7V.TI9bSpD2Y.vmjh29q.mr2', 'manager'),
+('Sales Staff', 'staff@smartinv.com', '$2y$10$TaebdVhPU8ePXZk4QLgewOvznbTtg7V.TI9bSpD2Y.vmjh29q.mr2', 'staff');
 
 -- Default settings
 INSERT INTO `settings` (`company_name`, `gst_number`, `invoice_prefix`, `currency`, `currency_symbol`, `gst_rate`, `address`, `phone`, `email`) VALUES
