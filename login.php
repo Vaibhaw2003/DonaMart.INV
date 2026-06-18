@@ -12,7 +12,7 @@ if (isLoggedIn()) {
     exit;
 }
 
-$error = '';
+$error   = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -31,120 +31,387 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+// Read saved theme from cookie (so login page respects user preference)
+$theme = $_COOKIE['smartinv_theme'] ?? 'dark';
 ?>
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="<?= e($theme) ?>" data-bs-theme="<?= e($theme) ?>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Login to SmartINV — Smart Inventory & Billing Management System" />
-  <title>Login | SmartINV</title>
+  <title>Login | SmartINV — Smart Inventory & Billing</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/style.css" />
+  <style>
+    /* Extra login-only page styles */
+    .auth-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 100vh;
+    }
+    @media (min-width: 1024px) {
+      .auth-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .auth-left-panel {
+      background: linear-gradient(135deg, #050814 0%, #0b1127 60%, #060c1e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-right-panel {
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      position: relative;
+    }
+
+    /* Feature list on left panel */
+    .auth-feature {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.6);
+      font-size: 13.5px;
+    }
+    .auth-feature:last-child { border-bottom: none; }
+    .auth-feature-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    /* Stats counters on left */
+    .auth-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .auth-stat-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .auth-stat-box .num {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      display: block;
+    }
+    .auth-stat-box .lbl {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* Right panel card */
+    .auth-form-wrapper {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* Light mode right panel card */
+    [data-theme="light"] .auth-right-panel {
+      background: #f0f2f7;
+    }
+    [data-theme="light"] .auth-form-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      padding: 42px 38px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    }
+    [data-theme="light"] .auth-form-card .input-icon-wrapper .form-control {
+      background: #f8fafc !important;
+      border: 1.5px solid #e2e8f0 !important;
+      color: #111827 !important;
+    }
+    [data-theme="light"] .auth-form-card .input-icon-wrapper .form-control::placeholder {
+      color: #9ca3af !important;
+    }
+    [data-theme="light"] .auth-form-card .input-icon-wrapper .input-icon {
+      color: #9ca3af;
+    }
+    [data-theme="light"] .auth-form-card .input-action-btn {
+      color: #9ca3af;
+    }
+    [data-theme="light"] .auth-form-card .input-action-btn:hover {
+      color: #374151;
+    }
+    [data-theme="light"] .auth-form-card .form-label-auth {
+      color: #374151;
+    }
+    [data-theme="light"] .auth-form-card .auth-title {
+      color: #111827;
+    }
+    [data-theme="light"] .auth-form-card .auth-subtitle {
+      color: #6b7280;
+    }
+    [data-theme="light"] .auth-form-card .quick-logins {
+      border-top-color: #e2e8f0;
+    }
+    [data-theme="light"] .auth-form-card .quick-login-label {
+      color: #9ca3af;
+    }
+    [data-theme="light"] .auth-form-card .btn-quick-login {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+      color: #374151;
+    }
+    [data-theme="light"] .auth-form-card .btn-quick-login:hover {
+      background: #eef2ff;
+      border-color: #4f46e5;
+      color: #4f46e5;
+    }
+
+    /* Dark mode card */
+    [data-theme="dark"] .auth-form-card {
+      background: rgba(13, 20, 40, 0.55);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 24px;
+      padding: 42px 38px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+    }
+  </style>
 </head>
 <body>
 
-<div class="auth-page">
-  <div class="auth-bg-shapes"></div>
+<div class="auth-grid">
 
-  <!-- Floating particles -->
-  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
-    <?php for($i=0;$i<12;$i++): ?>
-    <div style="
-      position:absolute;
-      width:<?= rand(4,10) ?>px; height:<?= rand(4,10) ?>px;
-      background:rgba(37,99,235,<?= rand(1,4)/10 ?>);
-      border-radius:50%;
-      left:<?= rand(5,95) ?>%;
-      top:<?= rand(5,95) ?>%;
-      animation: fadeInUp <?= rand(2,5) ?>s ease infinite alternate;
-      animation-delay: <?= rand(0,3) ?>s;
-    "></div>
-    <?php endfor; ?>
-  </div>
+  <!-- LEFT PANEL (shown on desktop) -->
+  <div class="auth-left-panel d-none d-lg-flex">
+    <!-- Glow orbs -->
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
 
-  <div class="auth-card">
-    <!-- Logo -->
-    <div class="auth-logo">
-      <i class="bi bi-box-seam-fill"></i>
+    <!-- Floating particles -->
+    <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;">
+      <?php for($i=0;$i<18;$i++): ?>
+      <div style="
+        position:absolute;
+        width:<?= rand(2,7) ?>px; height:<?= rand(2,7) ?>px;
+        background:rgba(99,102,241,<?= rand(1,4)/10 ?>);
+        border-radius:50%;
+        left:<?= rand(3,97) ?>%; top:<?= rand(3,97) ?>%;
+        animation: fadeInUp <?= rand(4,8) ?>s ease infinite alternate;
+        animation-delay: <?= rand(0,5) ?>s;
+      "></div>
+      <?php endfor; ?>
     </div>
 
-    <h1 class="auth-title">Welcome Back</h1>
-    <p class="auth-subtitle">Sign in to your SmartINV account</p>
-
-    <?php if ($error): ?>
-    <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:10px;">
-      <i class="bi bi-exclamation-triangle-fill"></i>
-      <?= e($error) ?>
-    </div>
-    <?php endif; ?>
-
-    <form method="POST" action="" id="loginForm" novalidate>
-      <div class="mb-3">
-        <label class="form-label" for="email">Email Address</label>
-        <div class="position-relative">
-          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.4);">
-            <i class="bi bi-envelope-fill"></i>
-          </span>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="admin@smartinv.com"
-            value="<?= e($_POST['email'] ?? '') ?>"
-            style="padding-left:38px;"
-            required
-            autocomplete="email"
-          />
+    <div style="position:relative;z-index:1;width:100%;max-width:400px;">
+      <!-- Brand -->
+      <div class="d-flex align-items-center gap-3 mb-8" style="margin-bottom:40px;">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#4f46e5,#818cf8);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 24px rgba(79,70,229,0.4);">
+          <i class="bi bi-box-seam-fill" style="color:#fff;"></i>
+        </div>
+        <div>
+          <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">Smart<span style="background:linear-gradient(135deg,#818cf8,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">INV</span></div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Business Suite</div>
         </div>
       </div>
 
-      <div class="mb-4">
-        <label class="form-label" for="password">Password</label>
-        <div class="position-relative">
-          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.4);">
-            <i class="bi bi-lock-fill"></i>
-          </span>
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            style="padding-left:38px;padding-right:44px;"
-            required
-            autocomplete="current-password"
-          />
-          <button type="button" id="togglePwd" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;padding:0;">
-            <i class="bi bi-eye-fill" id="togglePwdIcon"></i>
+      <!-- Tagline -->
+      <h1 style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.15;margin-bottom:12px;">
+        Your Complete<br><span style="background:linear-gradient(135deg,#818cf8,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Business Dashboard</span>
+      </h1>
+      <p style="font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:36px;line-height:1.6;">
+        Manage inventory, sales, purchases and generate professional invoices — all from one place.
+      </p>
+
+      <!-- Features -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:8px 20px;margin-bottom:28px;">
+        <div class="auth-feature">
+          <div class="auth-feature-icon" style="background:rgba(79,70,229,0.2);color:#818cf8;"><i class="bi bi-boxes"></i></div>
+          <span>Smart Inventory Management</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon" style="background:rgba(16,185,129,0.2);color:#34d399;"><i class="bi bi-receipt-cutoff"></i></div>
+          <span>Professional GST Invoicing</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon" style="background:rgba(6,182,212,0.2);color:#22d3ee;"><i class="bi bi-bar-chart-line-fill"></i></div>
+          <span>Real-time Reports & Analytics</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon" style="background:rgba(245,158,11,0.2);color:#fbbf24;"><i class="bi bi-file-pdf-fill"></i></div>
+          <span>PDF & Email Invoice Delivery</span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="auth-stats">
+        <div class="auth-stat-box">
+          <span class="num">₹∞</span>
+          <span class="lbl">Revenue Tracked</span>
+        </div>
+        <div class="auth-stat-box">
+          <span class="num">3</span>
+          <span class="lbl">User Roles</span>
+        </div>
+        <div class="auth-stat-box">
+          <span class="num">100%</span>
+          <span class="lbl">GST Ready</span>
+        </div>
+        <div class="auth-stat-box">
+          <span class="num">24/7</span>
+          <span class="lbl">Available</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: Login Form -->
+  <div class="auth-right-panel">
+    <!-- Dark mode toggle -->
+    <button id="themeSwitcher" onclick="toggleTheme()" style="
+      position:absolute;top:20px;right:20px;
+      width:38px;height:38px;border-radius:10px;
+      background:var(--surface);border:1.5px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;color:var(--text-muted);font-size:16px;
+      transition:all .2s ease;
+    ">
+      <i class="bi bi-<?= $theme === 'dark' ? 'sun-fill' : 'moon-stars-fill' ?>" id="themeIcon"></i>
+    </button>
+
+    <div class="auth-form-wrapper">
+      <div class="auth-form-card">
+
+        <!-- Logo (mobile) -->
+        <div class="d-lg-none mb-4 text-center">
+          <div style="width:54px;height:54px;background:linear-gradient(135deg,#4f46e5,#818cf8);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px;">
+            <i class="bi bi-box-seam-fill" style="color:#fff;"></i>
+          </div>
+          <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px;">Smart<span style="color:var(--primary);">INV</span></div>
+        </div>
+
+        <h1 class="auth-title" style="font-size:24px;font-weight:800;margin-bottom:5px;">Welcome Back 👋</h1>
+        <p class="auth-subtitle" style="margin-bottom:28px;">Sign in to your SmartINV account</p>
+
+        <?php if ($error): ?>
+        <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:10px 14px;margin-bottom:18px;display:flex;align-items:center;gap:8px;font-size:13px;color:#fca5a5;">
+          <i class="bi bi-exclamation-triangle-fill" style="color:#ef4444;flex-shrink:0;"></i>
+          <?= e($error) ?>
+        </div>
+        <?php endif; ?>
+
+        <form method="POST" action="" id="loginForm" novalidate>
+          <div class="mb-3">
+            <label class="form-label-auth" for="loginEmail">Email Address</label>
+            <div class="input-icon-wrapper">
+              <input
+                type="email"
+                class="form-control"
+                id="loginEmail"
+                name="email"
+                placeholder="admin@smartinv.com"
+                value="<?= e($_POST['email'] ?? '') ?>"
+                required
+                autocomplete="email"
+              />
+              <span class="input-icon"><i class="bi bi-envelope-fill"></i></span>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label-auth mb-0" for="loginPassword">Password</label>
+            </div>
+            <div class="input-icon-wrapper">
+              <input
+                type="password"
+                class="form-control"
+                id="loginPassword"
+                name="password"
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+              />
+              <span class="input-icon"><i class="bi bi-lock-fill"></i></span>
+              <button type="button" id="togglePwd" class="input-action-btn" tabindex="-1">
+                <i class="bi bi-eye-fill" id="togglePwdIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-auth" id="loginBtn">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
           </button>
+        </form>
+
+        <!-- Quick login links -->
+        <div class="quick-logins">
+          <div class="quick-login-label">⚡ Quick Demo Access</div>
+          <div class="d-flex justify-content-between gap-2 mt-3">
+            <button type="button" class="btn-quick-login" data-email="admin@smartinv.com" data-role="Admin" id="quickAdmin">
+              <span class="role-badge role-admin"><i class="bi bi-shield-fill" style="font-size:8px;"></i></span>
+              <span>Admin</span>
+            </button>
+            <button type="button" class="btn-quick-login" data-email="manager@smartinv.com" data-role="Manager" id="quickManager">
+              <span class="role-badge role-manager"><i class="bi bi-person-fill" style="font-size:8px;"></i></span>
+              <span>Manager</span>
+            </button>
+            <button type="button" class="btn-quick-login" data-email="staff@smartinv.com" data-role="Staff" id="quickStaff">
+              <span class="role-badge role-staff"><i class="bi bi-headset" style="font-size:8px;"></i></span>
+              <span>Staff</span>
+            </button>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.22);text-align:center;margin-top:10px;" id="pwdHint"></div>
         </div>
+
       </div>
-
-      <button type="submit" class="btn btn-auth" id="loginBtn">
-        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
-      </button>
-    </form>
-
-    <!-- Demo credentials -->
-    <div class="demo-creds">
-      <div class="mb-1"><strong>🔑 Demo Credentials:</strong></div>
-      <div>Admin: <strong>admin@smartinv.com</strong> / <strong>Admin@123</strong></div>
-      <div>Manager: <strong>manager@smartinv.com</strong> / <strong>Admin@123</strong></div>
-      <div>Staff: <strong>staff@smartinv.com</strong> / <strong>Admin@123</strong></div>
     </div>
   </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Toggle password visibility
+  // ── Theme toggle ──────────────────────────────────────────────
+  function toggleTheme() {
+    const html  = document.documentElement;
+    const curr  = html.getAttribute('data-theme') || 'dark';
+    const next  = curr === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    html.setAttribute('data-bs-theme', next);
+    document.getElementById('themeIcon').className = next === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    localStorage.setItem('smartinv_theme', next);
+    document.cookie = 'smartinv_theme=' + next + ';path=/;max-age=31536000;SameSite=Strict';
+  }
+
+  // ── Toggle password visibility ────────────────────────────────
   document.getElementById('togglePwd').addEventListener('click', function() {
-    const pwd  = document.getElementById('password');
+    const pwd  = document.getElementById('loginPassword');
     const icon = document.getElementById('togglePwdIcon');
     if (pwd.type === 'password') {
       pwd.type = 'text';
@@ -155,12 +422,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   });
 
-  // Loading state on submit
+  // ── Quick fill credentials ────────────────────────────────────
+  document.querySelectorAll('.btn-quick-login').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const email = this.dataset.email;
+      const emailInput = document.getElementById('loginEmail');
+      const pwdInput   = document.getElementById('loginPassword');
+      emailInput.value = email;
+      pwdInput.value   = 'Admin@123';
+
+      document.getElementById('pwdHint').textContent = '✓ Credentials filled — click Sign In';
+
+      [emailInput, pwdInput].forEach(input => {
+        input.classList.remove('pulse-glow');
+        void input.offsetWidth;
+        input.classList.add('pulse-glow');
+      });
+    });
+  });
+
+  // ── Loading state on submit ───────────────────────────────────
   document.getElementById('loginForm').addEventListener('submit', function() {
     const btn = document.getElementById('loginBtn');
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" style="width:16px;height:16px;border-width:2px;"></span>Signing in…';
     btn.disabled = true;
+    btn.style.opacity = '0.8';
   });
+
+  // ── Sync theme from localStorage on load ─────────────────────
+  (function() {
+    const saved = localStorage.getItem('smartinv_theme');
+    if (saved && saved !== document.documentElement.getAttribute('data-theme')) {
+      document.documentElement.setAttribute('data-theme', saved);
+      document.documentElement.setAttribute('data-bs-theme', saved);
+      const icon = document.getElementById('themeIcon');
+      if (icon) icon.className = saved === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    }
+  })();
 </script>
 </body>
 </html>
