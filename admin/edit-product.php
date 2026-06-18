@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Edit Product
  * Smart Inventory & Billing Management System
@@ -66,15 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include '../includes/header.php';
 include '../includes/sidebar.php';
 ?>
-<div class="main-content">
-  <header class="app-header">
-    <button class="header-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
-    <div class="header-search"><div class="search-wrapper"><i class="bi bi-search search-icon"></i><input type="text" class="form-control" placeholder="Search..." /></div></div>
-    <div class="header-actions">
-      <button class="header-btn" id="darkModeToggle"><i class="bi bi-moon-stars-fill" id="darkModeIcon"></i></button>
-      <a href="<?= APP_URL ?>/logout.php" class="header-btn"><i class="bi bi-box-arrow-right"></i></a>
-    </div>
-  </header>
+<?php include '../includes/app_header.php'; ?>
   <main class="page-content">
     <div class="page-header">
       <div>

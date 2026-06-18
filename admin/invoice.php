@@ -36,8 +36,9 @@ include '../includes/sidebar.php';
   <header class="app-header no-print">
     <button class="header-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
     <div class="header-actions ms-auto">
-      <button class="header-btn" id="darkModeToggle"><i class="bi bi-moon-stars-fill" id="darkModeIcon"></i></button>
-      <a href="<?= APP_URL ?>/logout.php" class="header-btn"><i class="bi bi-box-arrow-right"></i></a>
+      <button class="header-btn" id="darkModeToggle" data-bs-toggle="tooltip" title="Toggle Theme">
+        <i class="bi bi-moon-stars-fill" id="darkModeIcon"></i>
+      </button>
     </div>
   </header>
   <main class="page-content">
