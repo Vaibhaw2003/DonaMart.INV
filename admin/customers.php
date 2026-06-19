@@ -9,8 +9,8 @@ require_once '../includes/functions.php';
 requireLogin();
 
 $pageTitle = 'Customers';
-$message = ''; $msgType = 'success';
 
+// Save (add/update) customer
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id      = (int)($_POST['id'] ?? 0);
     $name    = trim($_POST['name'] ?? '');
@@ -18,17 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email   = trim($_POST['email'] ?? '');
     $address = trim($_POST['address'] ?? '');
 
-    if (empty($name)) { $message = 'Customer name is required.'; $msgType = 'danger'; }
-    else {
+    if (empty($name)) {
+        $message = 'Customer name is required.';
+        $msgType = 'danger';
+    } else {
         if ($id > 0) {
             db()->execute('UPDATE customers SET name=?,phone=?,email=?,address=? WHERE id=?',[$name,$phone,$email,$address,$id]);
             logActivity("Updated customer: $name",'customers');
-            $message = 'Customer updated successfully!';
+            $_SESSION['flash_message'] = 'Customer updated successfully!';
         } else {
             db()->insert('INSERT INTO customers (name,phone,email,address) VALUES (?,?,?,?)',[$name,$phone,$email,$address]);
             logActivity("Added customer: $name",'customers');
-            $message = 'Customer added successfully!';
+            $_SESSION['flash_message'] = 'Customer added successfully!';
         }
+
+        // ⭐ Redirect so refresh re-runs a GET, not the POST → no duplicate inserts
+        header('Location: '.APP_URL.'/admin/customers.php?saved=1'); exit;
     }
 }
 
@@ -39,6 +44,11 @@ if (isset($_GET['delete'])) {
     logActivity("Deleted customer: ".($c['name']??''),'customers');
     header('Location: '.APP_URL.'/admin/customers.php?deleted=1'); exit;
 }
+
+// Pull flash message set by a previous request (survives the redirect)
+$message = $message ?? ($_SESSION['flash_message'] ?? '');
+$msgType = $msgType ?? 'success';
+unset($_SESSION['flash_message']);
 
 $editCustomer = null;
 if (isset($_GET['edit'])) $editCustomer = db()->fetchOne('SELECT * FROM customers WHERE id=?',[(int)$_GET['edit']]);
