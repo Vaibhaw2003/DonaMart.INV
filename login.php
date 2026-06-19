@@ -45,7 +45,7 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/style.css" />
@@ -63,7 +63,7 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
     }
 
     .auth-left-panel {
-      background: linear-gradient(135deg, #050814 0%, #0b1127 60%, #060c1e 100%);
+      background: linear-gradient(135deg, #0E1712 0%, #142119 55%, #0E1712 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -116,6 +116,7 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
       text-align: center;
     }
     .auth-stat-box .num {
+      font-family: 'IBM Plex Mono', monospace;
       font-size: 24px;
       font-weight: 800;
       color: #fff;
@@ -138,61 +139,61 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
 
     /* Light mode right panel card */
     [data-theme="light"] .auth-right-panel {
-      background: #f0f2f7;
+      background: var(--bg);
     }
     [data-theme="light"] .auth-form-card {
-      background: #fff;
-      border: 1px solid #e2e8f0;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 24px;
       padding: 42px 38px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 40px rgba(20,25,18,0.1);
     }
     [data-theme="light"] .auth-form-card .input-icon-wrapper .form-control {
-      background: #f8fafc !important;
-      border: 1.5px solid #e2e8f0 !important;
-      color: #111827 !important;
+      background: var(--surface-2) !important;
+      border: 1.5px solid var(--border) !important;
+      color: var(--text) !important;
     }
     [data-theme="light"] .auth-form-card .input-icon-wrapper .form-control::placeholder {
-      color: #9ca3af !important;
+      color: var(--text-light) !important;
     }
     [data-theme="light"] .auth-form-card .input-icon-wrapper .input-icon {
-      color: #9ca3af;
+      color: var(--text-light);
     }
     [data-theme="light"] .auth-form-card .input-action-btn {
-      color: #9ca3af;
+      color: var(--text-light);
     }
     [data-theme="light"] .auth-form-card .input-action-btn:hover {
-      color: #374151;
+      color: var(--text);
     }
     [data-theme="light"] .auth-form-card .form-label-auth {
-      color: #374151;
+      color: var(--text-secondary);
     }
     [data-theme="light"] .auth-form-card .auth-title {
-      color: #111827;
+      color: var(--text);
     }
     [data-theme="light"] .auth-form-card .auth-subtitle {
-      color: #6b7280;
+      color: var(--text-muted);
     }
     [data-theme="light"] .auth-form-card .quick-logins {
-      border-top-color: #e2e8f0;
+      border-top-color: var(--border);
     }
     [data-theme="light"] .auth-form-card .quick-login-label {
-      color: #9ca3af;
+      color: var(--text-light);
     }
     [data-theme="light"] .auth-form-card .btn-quick-login {
-      background: #f8fafc;
-      border-color: #e2e8f0;
-      color: #374151;
+      background: var(--surface-2);
+      border-color: var(--border);
+      color: var(--text-secondary);
     }
     [data-theme="light"] .auth-form-card .btn-quick-login:hover {
-      background: #eef2ff;
-      border-color: #4f46e5;
-      color: #4f46e5;
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-dark);
     }
 
     /* Dark mode card */
     [data-theme="dark"] .auth-form-card {
-      background: rgba(13, 20, 40, 0.55);
+      background: rgba(20, 33, 25, 0.55);
       backdrop-filter: blur(32px);
       -webkit-backdrop-filter: blur(32px);
       border: 1px solid rgba(255,255,255,0.07);
@@ -219,7 +220,7 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
       <div style="
         position:absolute;
         width:<?= rand(2,7) ?>px; height:<?= rand(2,7) ?>px;
-        background:rgba(99,102,241,<?= rand(1,4)/10 ?>);
+        background:rgba(201,122,26,<?= rand(1,4)/10 ?>);
         border-radius:50%;
         left:<?= rand(3,97) ?>%; top:<?= rand(3,97) ?>%;
         animation: fadeInUp <?= rand(4,8) ?>s ease infinite alternate;
@@ -231,18 +232,18 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
     <div style="position:relative;z-index:1;width:100%;max-width:400px;">
       <!-- Brand -->
       <div class="d-flex align-items-center gap-3 mb-8" style="margin-bottom:40px;">
-        <div style="width:52px;height:52px;background:linear-gradient(135deg,#4f46e5,#818cf8);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 24px rgba(79,70,229,0.4);">
-          <i class="bi bi-box-seam-fill" style="color:#fff;"></i>
+        <div style="width:52px;height:52px;background:#C97A1A;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 24px rgba(201,122,26,0.4);">
+          <i class="bi bi-box-seam-fill" style="color:#15231D;"></i>
         </div>
         <div>
-          <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">Smart<span style="background:linear-gradient(135deg,#818cf8,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">INV</span></div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Business Suite</div>
+          <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">Smart<span style="color:#C97A1A;">INV</span></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,0.35);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Business Suite</div>
         </div>
       </div>
 
       <!-- Tagline -->
-      <h1 style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.15;margin-bottom:12px;">
-        Your Complete<br><span style="background:linear-gradient(135deg,#818cf8,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Business Dashboard</span>
+      <h1 style="font-family:'Fraunces',serif;font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.15;margin-bottom:12px;">
+        Your Complete<br><span style="color:#DD8F2E;">Business Dashboard</span>
       </h1>
       <p style="font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:36px;line-height:1.6;">
         Manage inventory, sales, purchases and generate professional invoices — all from one place.
@@ -251,19 +252,19 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
       <!-- Features -->
       <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:8px 20px;margin-bottom:28px;">
         <div class="auth-feature">
-          <div class="auth-feature-icon" style="background:rgba(79,70,229,0.2);color:#818cf8;"><i class="bi bi-boxes"></i></div>
+          <div class="auth-feature-icon" style="background:rgba(43,92,115,0.22);color:#6FA8C2;"><i class="bi bi-boxes"></i></div>
           <span>Smart Inventory Management</span>
         </div>
         <div class="auth-feature">
-          <div class="auth-feature-icon" style="background:rgba(16,185,129,0.2);color:#34d399;"><i class="bi bi-receipt-cutoff"></i></div>
+          <div class="auth-feature-icon" style="background:rgba(60,110,71,0.22);color:#6FAE7C;"><i class="bi bi-receipt-cutoff"></i></div>
           <span>Professional GST Invoicing</span>
         </div>
         <div class="auth-feature">
-          <div class="auth-feature-icon" style="background:rgba(6,182,212,0.2);color:#22d3ee;"><i class="bi bi-bar-chart-line-fill"></i></div>
+          <div class="auth-feature-icon" style="background:rgba(91,75,138,0.22);color:#9C8ED1;"><i class="bi bi-bar-chart-line-fill"></i></div>
           <span>Real-time Reports & Analytics</span>
         </div>
         <div class="auth-feature">
-          <div class="auth-feature-icon" style="background:rgba(245,158,11,0.2);color:#fbbf24;"><i class="bi bi-file-pdf-fill"></i></div>
+          <div class="auth-feature-icon" style="background:rgba(201,122,26,0.22);color:#E0A050;"><i class="bi bi-file-pdf-fill"></i></div>
           <span>PDF & Email Invoice Delivery</span>
         </div>
       </div>
@@ -309,18 +310,18 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
 
         <!-- Logo (mobile) -->
         <div class="d-lg-none mb-4 text-center">
-          <div style="width:54px;height:54px;background:linear-gradient(135deg,#4f46e5,#818cf8);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px;">
-            <i class="bi bi-box-seam-fill" style="color:#fff;"></i>
+          <div style="width:54px;height:54px;background:#C97A1A;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px;">
+            <i class="bi bi-box-seam-fill" style="color:#15231D;"></i>
           </div>
-          <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px;">Smart<span style="color:var(--primary);">INV</span></div>
+          <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:800;letter-spacing:-0.5px;">Smart<span style="color:var(--primary);">INV</span></div>
         </div>
 
         <h1 class="auth-title" style="font-size:24px;font-weight:800;margin-bottom:5px;">Welcome Back 👋</h1>
         <p class="auth-subtitle" style="margin-bottom:28px;">Sign in to your SmartINV account</p>
 
         <?php if ($error): ?>
-        <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:10px 14px;margin-bottom:18px;display:flex;align-items:center;gap:8px;font-size:13px;color:#fca5a5;">
-          <i class="bi bi-exclamation-triangle-fill" style="color:#ef4444;flex-shrink:0;"></i>
+        <div style="background:rgba(166,64,47,0.12);border:1px solid rgba(166,64,47,0.3);border-radius:10px;padding:10px 14px;margin-bottom:18px;display:flex;align-items:center;gap:8px;font-size:13px;color:#E2A89A;">
+          <i class="bi bi-exclamation-triangle-fill" style="color:#C2604A;flex-shrink:0;"></i>
           <?= e($error) ?>
         </div>
         <?php endif; ?>
