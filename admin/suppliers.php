@@ -9,8 +9,8 @@ require_once '../includes/functions.php';
 requireLogin();
 
 $pageTitle = 'Suppliers';
-$message = ''; $msgType = 'success';
 
+// Save (add/update) supplier
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id      = (int)($_POST['id'] ?? 0);
     $company = trim($_POST['company_name'] ?? '');
@@ -20,22 +20,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gst     = trim($_POST['gst_no'] ?? '');
     $address = trim($_POST['address'] ?? '');
 
-    if (empty($company)) { $message = 'Company name is required.'; $msgType = 'danger'; }
-    else {
+    if (empty($company)) {
+        // No redirect on validation error — we need $_POST values to
+        // refill the form, so we fall through and render the page normally.
+        $message = 'Company name is required.';
+        $msgType = 'danger';
+    } else {
         if ($id > 0) {
             db()->execute('UPDATE suppliers SET company_name=?,contact_person=?,phone=?,email=?,gst_no=?,address=? WHERE id=?',
                 [$company,$contact,$phone,$email,$gst,$address,$id]);
             logActivity("Updated supplier: $company", 'suppliers');
-            $message = 'Supplier updated successfully!';
+            $_SESSION['flash_message'] = 'Supplier updated successfully!';
         } else {
             db()->insert('INSERT INTO suppliers (company_name,contact_person,phone,email,gst_no,address) VALUES (?,?,?,?,?,?)',
                 [$company,$contact,$phone,$email,$gst,$address]);
             logActivity("Added supplier: $company", 'suppliers');
-            $message = 'Supplier added successfully!';
+            $_SESSION['flash_message'] = 'Supplier added successfully!';
         }
+
+        // ⭐ Redirect so refresh re-runs a GET, not the POST → no duplicate inserts
+        header('Location: '.APP_URL.'/admin/suppliers.php?saved=1'); exit;
     }
 }
 
+// Delete supplier
 if (isset($_GET['delete'])) {
     $delId = (int)$_GET['delete'];
     $sup = db()->fetchOne('SELECT company_name FROM suppliers WHERE id=?',[$delId]);
@@ -43,6 +51,11 @@ if (isset($_GET['delete'])) {
     logActivity("Deleted supplier: ".($sup['company_name']??''), 'suppliers');
     header('Location: '.APP_URL.'/admin/suppliers.php?deleted=1'); exit;
 }
+
+// Pull flash message set by a previous request (survives the redirect)
+$message = $message ?? ($_SESSION['flash_message'] ?? '');
+$msgType = $msgType ?? 'success';
+unset($_SESSION['flash_message']);
 
 $editSupplier = null;
 if (isset($_GET['edit'])) $editSupplier = db()->fetchOne('SELECT * FROM suppliers WHERE id=?',[(int)$_GET['edit']]);
