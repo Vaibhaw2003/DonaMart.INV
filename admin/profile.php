@@ -32,11 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Password change
+        // Password change — only attempt if user actually typed a new password.
+        // (Browsers autofill "current_password" automatically; basing this check
+        // on $currPwd would force a password change on every profile update.)
         $pwdSql = '';
         $pwdParams = [];
-        if (!empty($currPwd)) {
-            if (!password_verify($currPwd, $user['password'])) {
+        if (!empty($newPwd) || !empty($confPwd)) {
+            if (empty($currPwd)) {
+                $message = 'Please enter your current password to set a new one.'; $msgType = 'danger';
+            } elseif (!password_verify($currPwd, $user['password'])) {
                 $message = 'Current password is incorrect.'; $msgType = 'danger';
             } elseif ($newPwd !== $confPwd) {
                 $message = 'New passwords do not match.'; $msgType = 'danger';
@@ -84,14 +88,14 @@ include '../includes/header.php'; include '../includes/sidebar.php';
             <img id="avatarPreview" src="<?= USER_UPLOAD_URL . e($user['avatar']) ?>"
                  style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--primary);margin-bottom:12px;" />
             <?php else: ?>
-            <div id="avatarPreview" style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#818cf8);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#fff;margin:0 auto 12px;">
+            <div id="avatarPreview" style="width:100px;height:100px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#15231D;margin:0 auto 12px;">
               <?= strtoupper(substr($user['name'],0,1)) ?>
             </div>
             <?php endif; ?>
             <h2 class="fw-700 mb-1" style="font-size:18px;"><?= e($user['name']) ?></h2>
             <div class="badge badge-primary mb-3"><?= ucfirst(e($user['role'])) ?></div>
             <div class="text-muted fs-12 mb-1"><i class="bi bi-envelope me-1"></i><?= e($user['email']) ?></div>
-            <div class="text-muted fs-12"><i class="bi bi-calendar me-1"></i>Joined <?= formatDate($user['created_at']) ?></div>
+            <div class="text-muted fs-12"><i class="bi bi-calendar me-1"></i>Joined <?= !empty($user['created_at']) ? formatDate($user['created_at']) : '—' ?></div>
           </div>
         </div>
 
@@ -120,7 +124,7 @@ include '../includes/header.php'; include '../includes/sidebar.php';
 
       <!-- Edit Form -->
       <div class="col-lg-8">
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" autocomplete="off">
           <div class="card mb-3">
             <div class="card-header"><h2 class="card-title"><i class="bi bi-person-fill me-2"></i>Personal Information</h2></div>
             <div class="card-body">
@@ -148,15 +152,24 @@ include '../includes/header.php'; include '../includes/sidebar.php';
               <div class="row g-3">
                 <div class="col-12">
                   <label class="form-label">Current Password</label>
-                  <input type="password" class="form-control" name="current_password" placeholder="Leave blank to keep current" />
+                  <div class="input-group">
+                    <input type="password" class="form-control" name="current_password" id="currentPwd" placeholder="Leave blank to keep current" autocomplete="off" />
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePwd('currentPwd', this)" tabindex="-1"><i class="bi bi-eye-fill"></i></button>
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">New Password</label>
-                  <input type="password" class="form-control" name="new_password" placeholder="Min. 6 characters" />
+                  <div class="input-group">
+                    <input type="password" class="form-control" name="new_password" id="newPwd" placeholder="Min. 6 characters" autocomplete="off" />
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePwd('newPwd', this)" tabindex="-1"><i class="bi bi-eye-fill"></i></button>
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Confirm New Password</label>
-                  <input type="password" class="form-control" name="confirm_password" placeholder="Repeat new password" />
+                  <div class="input-group">
+                    <input type="password" class="form-control" name="confirm_password" id="confirmPwd" placeholder="Repeat new password" autocomplete="off" />
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePwd('confirmPwd', this)" tabindex="-1"><i class="bi bi-eye-fill"></i></button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -191,6 +204,18 @@ document.getElementById('avatarInput').addEventListener('change', function() {
   };
   reader.readAsDataURL(file);
 });
+
+function togglePwd(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const icon = btn.querySelector('i');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
+  } else {
+    input.type = 'password';
+    icon.classList.replace('bi-eye-slash-fill', 'bi-eye-fill');
+  }
+}
 </script>
 JS;
 include '../includes/footer.php';
