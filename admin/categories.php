@@ -9,7 +9,6 @@ require_once '../includes/functions.php';
 requireLogin();
 
 $pageTitle = 'Categories';
-$message = ''; $msgType = 'success';
 
 // Handle save (add/edit)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,17 +17,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $desc = trim($_POST['description'] ?? '');
 
     if (empty($name)) {
-        $message = 'Category name is required.'; $msgType = 'danger';
+        $message = 'Category name is required.';
+        $msgType = 'danger';
     } else {
         if ($id > 0) {
             db()->execute('UPDATE categories SET name=?, description=? WHERE id=?', [$name, $desc, $id]);
             logActivity("Updated category: $name", 'categories');
-            $message = 'Category updated successfully!';
+            $_SESSION['flash_message'] = 'Category updated successfully!';
         } else {
             db()->insert('INSERT INTO categories (name, description) VALUES (?,?)', [$name, $desc]);
             logActivity("Added category: $name", 'categories');
-            $message = 'Category added successfully!';
+            $_SESSION['flash_message'] = 'Category added successfully!';
         }
+
+        // ⭐ Redirect so refresh re-runs a GET, not the POST → no duplicate inserts
+        header('Location: ' . APP_URL . '/admin/categories.php?saved=1');
+        exit;
     }
 }
 
@@ -41,6 +45,11 @@ if (isset($_GET['delete'])) {
     header('Location: ' . APP_URL . '/admin/categories.php?deleted=1');
     exit;
 }
+
+// Pull flash message set by a previous request (survives the redirect)
+$message = $message ?? ($_SESSION['flash_message'] ?? '');
+$msgType = $msgType ?? 'success';
+unset($_SESSION['flash_message']);
 
 // Fetch for edit
 $editCat = null;
