@@ -38,6 +38,6 @@ $theme = $_COOKIE['smartinv_theme'] ?? ($settings['theme'] ?? 'light');
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/style.css" />
+  <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/style.css?v=<?= filemtime(__DIR__ . '/../assets/css/style.css') ?>" />
 </head>
 <body>
