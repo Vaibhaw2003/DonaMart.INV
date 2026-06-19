@@ -216,17 +216,18 @@ $theme = $_COOKIE['smartinv_theme'] ?? 'dark';
 
     <!-- Floating particles -->
     <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;">
-      <?php for($i=0;$i<18;$i++): ?>
-      <div style="
-        position:absolute;
-        width:<?= rand(2,7) ?>px; height:<?= rand(2,7) ?>px;
-        background:rgba(201,122,26,<?= rand(1,4)/10 ?>);
-        border-radius:50%;
-        left:<?= rand(3,97) ?>%; top:<?= rand(3,97) ?>%;
-        animation: fadeInUp <?= rand(4,8) ?>s ease infinite alternate;
-        animation-delay: <?= rand(0,5) ?>s;
-      "></div>
-      <?php endfor; ?>
+      <?php
+        for ($i = 0; $i < 18; $i++) {
+          $width    = rand(2, 7);
+          $height   = rand(2, 7);
+          $alpha    = rand(1, 4) / 10;
+          $left     = rand(3, 97);
+          $top      = rand(3, 97);
+          $duration = rand(4, 8);
+          $delay    = rand(0, 5);
+          echo '<div style="position:absolute;width:' . $width . 'px;height:' . $height . 'px;background:rgba(201,122,26,' . $alpha . ');border-radius:50%;left:' . $left . '%;top:' . $top . '%;animation: fadeInUp ' . $duration . 's ease infinite alternate;animation-delay: ' . $delay . 's;"></div>';
+        }
+      ?>
     </div>
 
     <div style="position:relative;z-index:1;width:100%;max-width:400px;">
